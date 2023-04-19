@@ -1,8 +1,8 @@
 use std::collections::HashMap;
 use std::vec::Vec;
 
-
 mod wordlist;
+mod wordtree;
 
 fn main() {
 
@@ -19,4 +19,8 @@ fn main() {
     for key in keys {
         println!("{0}: {1}", key, frequencies[key]);
     }
+
+    let root = wordtree::get_root();
+
+    println!("{:?}", root);
 }
