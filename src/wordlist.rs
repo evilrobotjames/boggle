@@ -1,3 +1,13 @@
+#[allow(dead_code)]
+pub static WORDLIST_TEST :&str = 
+"a
+ba
+bb
+bca
+bca
+c";
+
+#[allow(dead_code)]
 pub static WORDLIST :&str =
 "aardvark
 aardwolf
