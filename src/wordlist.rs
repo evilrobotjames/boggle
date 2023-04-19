@@ -3,6 +3,7 @@ pub static WORDLIST_TEST :&str =
 "a
 ba
 bb
+bc
 bca
 bca
 c";

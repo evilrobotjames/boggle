@@ -9,6 +9,7 @@ pub struct LetterNode {
 }
 
 pub fn generate_root() -> LetterNode {
+
     let mut root = LetterNode {
         word: false,
         next: HashMap::new()
@@ -29,11 +30,10 @@ fn insert_string(node: &mut LetterNode, string: &str) {
             node.word = true;
         },
         Some(c) => {
-            println!("{}", c);
-            // ensure next LetterNode exists for the first letter, and recurse with the remaining string.
-            // insert_string(next_node, sequence[1:])
-            node.next.entry(c).or_insert(LetterNode { word: false, next: HashMap::new() });
-
+            // Ensure next LetterNode exists for the first letter
+            let next = node.next.entry(c).or_insert(LetterNode { word: false, next: HashMap::new() });
+            // Recurse through the remaining string
+            insert_string(next, &string[1..]);
         }
     }
 }
