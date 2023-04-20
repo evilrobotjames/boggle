@@ -8,12 +8,15 @@ pub struct LetterNode {
     pub next: HashMap<char, LetterNode>,
 }
 
+impl LetterNode {
+    fn new() -> LetterNode {
+        LetterNode { word: false, next: HashMap::new() }
+    }
+}
+
 pub fn generate_root() -> LetterNode {
 
-    let mut root = LetterNode {
-        word: false,
-        next: HashMap::new()
-    };
+    let mut root = LetterNode::new();
 
     for word in wordlist::WORDLIST_TEST.lines() {
         insert_string(&mut root, &word);
@@ -31,7 +34,7 @@ fn insert_string(node: &mut LetterNode, string: &str) {
         },
         Some(c) => {
             // Ensure next LetterNode exists for the first letter
-            let next = node.next.entry(c).or_insert(LetterNode { word: false, next: HashMap::new() });
+            let next = node.next.entry(c).or_insert(LetterNode::new());
             // Recurse through the remaining string
             insert_string(next, &string[1..]);
         }
