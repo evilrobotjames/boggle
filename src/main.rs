@@ -1,9 +1,8 @@
-mod wordlist;
-mod wordtree;
+mod words;
 
 fn main() {
 
-    let root = wordtree::generate_root(wordlist::WORDLIST_TEST2);
+    let root = words::root();
 
     println!("{:#?}", root);
 }

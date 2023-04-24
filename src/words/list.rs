@@ -1,31 +1,4 @@
 #[allow(dead_code)]
-pub static WORDLIST_TEST :&str = 
-"a
-ba
-bb
-bc
-bca
-c";
-
-#[allow(dead_code)]
-pub static WORDLIST_TEST2 :&str = 
-"ice
-iceage
-iceberg
-icebergs
-icebox
-icecap
-icecold
-icecream
-iced
-iceland
-iceman
-icepack
-icepick
-icepicks
-ices";
-
-#[allow(dead_code)]
 pub static WORDLIST :&str =
 "aardvark
 aardwolf
