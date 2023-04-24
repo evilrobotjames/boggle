@@ -1,7 +1,5 @@
 use std::collections::HashMap;
 
-use crate::wordlist;
-
 #[derive(Debug)]
 pub struct LetterNode {
     pub word: bool,
@@ -14,11 +12,11 @@ impl LetterNode {
     }
 }
 
-pub fn generate_root() -> LetterNode {
+pub fn generate_root(wordlist: &str) -> LetterNode {
 
     let mut root = LetterNode::new();
 
-    for word in wordlist::WORDLIST_TEST.lines() {
+    for word in wordlist.lines() {
         insert_string(&mut root, &word);
     }
 
