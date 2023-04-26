@@ -32,13 +32,15 @@ impl Node {
             let letter = letter_to_node.0;
             let node = letter_to_node.1;
 
+            potential_word.push(*letter);
+
             if node.word {
                 // this is a complete word.  add current potential_word to words vector and continue.
                 let confirmed_word = String::from(potential_word.as_str());
+                // TODO: Do we keep this list sorted in the first place?  Or sort it all at the end?
                 words.push(confirmed_word);
             }
 
-            potential_word.push(*letter);
             node.to_words_recurse(words, potential_word);
             potential_word.pop();
         }
@@ -50,6 +52,7 @@ impl Node {
 
         self.to_words_recurse(&mut words, &mut potential_word);
 
+        words.sort();
         words
     }
 }
