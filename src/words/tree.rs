@@ -46,14 +46,14 @@ impl Node {
         }
     }
 
-    pub fn to_words(&self) -> Vec<String> {
+    pub fn to_list(&self) -> String {
         let mut words: Vec<String> = Vec::new();
         let mut potential_word = String::new();
 
         self.to_words_recurse(&mut words, &mut potential_word);
 
         words.sort();
-        words
+        words.join("\n")
     }
 }
 
