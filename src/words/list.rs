@@ -7870,7 +7870,6 @@ chaperones
 chaplain
 chaplaincy
 chaplains
-chaplain
 chapman
 chapped
 chapping
