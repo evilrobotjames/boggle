@@ -4,5 +4,9 @@ fn main() {
 
     let root = words::root();
 
-    println!("{:#?}", root);
+    let words = root.to_words();
+    
+    for word in words {
+        println!("{}", word);
+    }
 }
