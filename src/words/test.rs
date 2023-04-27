@@ -22,4 +22,15 @@ mod tests {
         test_round_trip(testlist::WORDLIST_TEST_SEGMENT);
     }
 
+    #[test]
+    fn test_contains_word() {
+        let root = generate_root(testlist::WORDLIST_TEST_SEGMENT);
+
+        assert!(!root.contains_word("cat"));
+        assert!(root.contains_word("icepick"));
+        assert!(root.contains_word("icepicks"));
+        assert!(!root.contains_word("aicepicks"));
+        assert!(!root.contains_word("icepicka"));
+    }
+
 }

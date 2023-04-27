@@ -3,8 +3,8 @@ use std::vec::Vec;
 
 #[derive(Debug)]
 pub struct Node {
-    pub word: bool,
-    pub next: HashMap<char, Node>,
+    pub word: bool, // Rename to "complete_word"?
+    pub next: HashMap<char, Node>, // Rename to "children"?
 }
 
 impl Node {
@@ -12,7 +12,7 @@ impl Node {
         Node { word: false, next: HashMap::new() }
     }
 
-    fn insert_string(&mut self, string:&str) {
+    fn insert_string(&mut self, string: &str) {
         match string.chars().next() {
             None => {
                 // The string is now empty.  Mark this node as a complete word.
@@ -54,6 +54,19 @@ impl Node {
 
         words.sort();
         words.join("\n")
+    }
+
+    pub fn contains_word(&self, word: &str) -> bool {
+
+        match word.chars().next() {
+            None => self.word, // 'word' is out of characters, return whether this is a complete word or not.
+            Some(c) => {
+                match self.next.get(&c) {
+                    None => false, // No child node for this letter, so not a complete word
+                    Some(child) => child.contains_word(&word[1..])
+                }
+            }
+        }
     }
 }
 
