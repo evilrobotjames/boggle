@@ -1,7 +1,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::words::{list, tree::generate_root, testlist};
+    use crate::dictionary::{list, tree::generate_root, testlist};
     
     fn test_round_trip(wordlist: &str) {
         assert_eq!(wordlist, generate_root(wordlist).to_list());
@@ -32,6 +32,7 @@ mod tests {
         assert!(!root.contains_word("aicepicks"));
         assert!(!root.contains_word("icepicka"));
         assert!(!root.contains_word(""));
+        assert!(!root.contains_word("abcdefghijklmnopqrstuvwxyz"));
     }
 
 }

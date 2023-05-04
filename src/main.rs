@@ -1,11 +1,11 @@
 #[macro_use]
 extern crate lazy_static;
 
-mod words;
+mod dictionary;
 
 fn main() {
 
-    println!("yay: {}", words::contains_word("smile"));
+    println!("Is smile a word?:  {}", dictionary::contains_word("smile"));
 
-    println!("{}", words::to_list());  
+    println!("{}", dictionary::to_list());  
 }
