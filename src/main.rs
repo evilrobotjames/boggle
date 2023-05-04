@@ -1,8 +1,11 @@
+#[macro_use]
+extern crate lazy_static;
+
 mod words;
 
 fn main() {
 
-    let root = words::root();
-    let _list = root.to_list();
-    println!("yay");    
+    println!("yay: {}", words::contains_word("smile"));
+
+    println!("{}", words::to_list());  
 }

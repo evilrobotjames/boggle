@@ -31,6 +31,7 @@ mod tests {
         assert!(root.contains_word("icepicks"));
         assert!(!root.contains_word("aicepicks"));
         assert!(!root.contains_word("icepicka"));
+        assert!(!root.contains_word(""));
     }
 
 }
