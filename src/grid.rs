@@ -27,6 +27,7 @@ static DICE: [[&str; NUM_SIDES]; NUM_DICE] = [
     ["h", "i", "m", "n", "qu", "u"],
 ];
 
+#[derive(Debug)]
 pub struct Cell <'a> {
     traversed_already: bool,
     value: &'a str,
@@ -41,52 +42,63 @@ impl <'a> Cell<'a> {
     }
 }
 
+#[derive(Debug)]
 pub struct Grid <'a> {
     cells: [Cell<'a>; NUM_CELLS],
 }
 
 impl <'a> Grid <'_> {
 
-    //pub fn new() -> Grid <'a> {
-    pub fn new() {
+    pub fn new() -> Grid <'a> {
+    
         // Create a new grid, with some random stuff in cells.
 
         let mut dice_order: Vec<usize> = (0..NUM_CELLS).collect();
         dice_order.shuffle(&mut rand::thread_rng());
 
-        println!("{:?}", dice_order);
+        let mut cells = Vec::new();
 
         for dice_index in dice_order {
             let mut rng = rand::thread_rng();
             let side_index = rng.gen_range(0..NUM_SIDES);
 
-
+            cells.push(Cell::new(DICE[dice_index][side_index]));
         }
 
-
-        //Grid {
-            //cells: Cell {traversed_already: false, value: DICE[3][4]}
-        //}
+        Grid {
+            cells: [
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+                cells.pop().expect("This has enough values"),
+            ]
+        }
     }
-
 }
 
 impl fmt::Display for Grid<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fmt::Result::Ok(())
-        /*
-        let output = String::new();
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+
+        let mut output = String::new();
         for row in 0..NUM_ROWS {
             for col in 0..NUM_COLS {
-                match write!(&mut output, "{} ", self.cells[NUM_COLS * row + col].value) {
-                    Ok => pass,
-                    Err(s) => return Err(s),
-                }
+                output.push_str(format!("{} ", self.cells[NUM_COLS * row + col].value).as_str());
             }
-            write!(f, "\n");
+            output.push('\n');
         }
 
-        Ok(())
-        */
+        write!(f, "{}", output)
     }
 }
