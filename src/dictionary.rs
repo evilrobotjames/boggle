@@ -17,7 +17,7 @@ pub fn to_list() -> String {
 
 pub fn contains_word(word: &str) -> bool {
     // This could return yes, no, and "no and what you've given me isn't even a prefix
-    // to a word", as an optimization.
+    // to a word", as an optimization.  Yes, No, Never.
 
     ROOT.contains_word(word)
 }

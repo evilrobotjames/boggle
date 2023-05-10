@@ -2,10 +2,9 @@
 extern crate lazy_static;
 
 mod dictionary;
+mod grid;
 
 fn main() {
 
-    println!("Is smile a word?:  {}", dictionary::contains_word("smile"));
-
-    println!("{}", dictionary::to_list());  
+    let grid = grid::Grid::new();
 }
