@@ -3,11 +3,11 @@
 extern crate lazy_static;
 
 mod dictionary;
-mod grid;
+mod game;
 
 fn main() {
 
-    let grid = grid::Grid::new();
+    let grid = game::Grid::new();
 
     println!("{}", grid)
 }
