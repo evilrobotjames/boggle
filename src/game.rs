@@ -1,93 +1,29 @@
-use core::fmt;
-use rand::{Rng, seq::SliceRandom};
+use self::grid::Grid;
 
+mod test;
 pub mod dice;
+pub mod grid;
 
-const NUM_ROWS: usize = 4;
-const NUM_COLS: usize = 4;
-const LEN_ROW: usize = NUM_COLS;
-const LEN_COL: usize = NUM_ROWS;
+use std::string::String;
 
-const NUM_CELLS: usize = NUM_ROWS * NUM_COLS;
-
-#[derive(Debug)]
-pub struct Cell <'a> {
-    traversed_already: bool,
-    value: &'a str,
+pub fn new_random(_size: usize) {
+    // Create new grid with random values.
 }
 
-impl <'a> Cell<'a> {
-    pub fn new (value: &'a str) -> Self { 
-        Self {
-            traversed_already: false,
-            value: value,
-        }
-    }
-}
-
-pub enum Direction {
-    North,
-    East,
-    South,
-    West,
-}
-
-#[derive(Debug)]
-pub struct Grid <'a> {
-    cells: Vec<Cell<'a>>,
-}
-
-impl <'a> Grid <'_> {
-
-    pub fn new() -> Self {
-    
-        // Create a new grid, with some random stuff in cells.
-
-        let mut dice_order: Vec<usize> = (0..NUM_CELLS).collect();
-        dice_order.shuffle(&mut rand::thread_rng());
-
-        let mut cells = Vec::new();
-
-        for dice_index in dice_order {
-            let mut rng = rand::thread_rng();
-            let side_index = rng.gen_range(0..dice::NUM_SIDES);
-
-            cells.push(Cell::new(dice::DICE[dice_index][side_index]));
-        }
-
-        Grid {
-            cells: cells,
-        }
+pub fn new_from_values(size: usize, values: Vec<&str>) -> Option<Grid> {
+    if values.len() != size * size {
+        return None;
     }
 
-    pub fn go(index: usize, direction: Direction) -> Option<usize> {
-        match direction {
-            Direction::North => if index < LEN_ROW { None } else { Some(index - LEN_ROW) },
-            Direction::East => if index % LEN_ROW == 0 { None } else { Some(index + 1) },
-            Direction::South => None,
-            Direction::West => None,
-        }
-    }
+    None
+    // Create new grid from values.
 }
 
-impl fmt::Display for Grid<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+pub fn solve(_grid: Grid, _lookup: fn(&str) -> bool) -> Vec<String> {
+    // Permute grid to generate potential words, using lookup to valiate.
+    // Returns a vector of strings found, sorted by length, longest first.
 
-        assert!(self.cells.len() == NUM_COLS * NUM_ROWS);
+    let words_found = Vec::new();
 
-        let mut output = String::new();
-
-        for row in 0..NUM_ROWS {
-
-            if row > 0 {
-                output.push('\n');
-            }
-
-            for col in 0..NUM_COLS {
-                output.push_str(format!("{} ", self.cells[NUM_COLS * row + col].value).as_str());
-            }            
-        }
-
-        write!(f, "{}", output)
-    }
+    words_found
 }
