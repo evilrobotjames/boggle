@@ -1,3 +1,5 @@
+use rand::Rng;
+
 pub const NUM_DICE: usize = 16;
 pub const NUM_SIDES: usize = 6;
 
@@ -19,3 +21,10 @@ pub static DICE: [[&str; NUM_SIDES]; NUM_DICE] = [
     ["e", "l", "r", "t", "t", "y"],
     ["h", "i", "m", "n", "qu", "u"],
 ];
+
+pub fn roll(sides: [&str; NUM_SIDES]) -> &str {
+    let mut rng = rand::thread_rng();
+    let side_index = rng.gen_range(0..NUM_SIDES);
+
+    sides[side_index]
+}

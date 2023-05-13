@@ -1,5 +1,4 @@
 use core::fmt;
-use rand::Rng;
 use rand::prelude::SliceRandom;
 use crate::game::dice;
 
@@ -27,14 +26,14 @@ impl <'a> Cell<'a> {
     pub fn new (value: &'a str) -> Self { 
         Self {
             traversed_already: false,
-            value: value,
+            value,
         }
     }
 }
 
 #[derive(Debug)]
 pub struct Grid <'a> {
-    pub cells: Vec<Cell<'a>>,
+    cells: Vec<Cell<'a>>,
 }
 
 impl <'a> Grid <'_> {
@@ -49,10 +48,8 @@ impl <'a> Grid <'_> {
         let mut cells = Vec::new();
 
         for dice_index in dice_order {
-            let mut rng = rand::thread_rng();
-            let side_index = rng.gen_range(0..dice::NUM_SIDES);
-
-            cells.push(Cell::new(dice::DICE[dice_index][side_index]));
+            let value = dice::roll(dice::DICE[dice_index]);
+            cells.push(Cell::new(value));
         }
 
         Grid {
@@ -61,11 +58,12 @@ impl <'a> Grid <'_> {
     }
 
     pub fn go(index: usize, direction: Direction) -> Option<usize> {
+        // Return the index of the cell to the direction of the cell specified by index
         match direction {
             Direction::North => if index < LEN_ROW { None } else { Some(index - LEN_ROW) },
             Direction::East => if index % LEN_ROW == 0 { None } else { Some(index + 1) },
-            Direction::South => None,
-            Direction::West => None,
+            Direction::South => if index + LEN_ROW > NUM_CELLS { None } else { Some(index + LEN_ROW) }, 
+            Direction::West => if index % LEN_ROW == 3 { None } else { Some(index - 1) },
         }
     }
 }
