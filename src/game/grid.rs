@@ -1,14 +1,17 @@
 use core::fmt;
+use std::str::FromStr;
 use rand::prelude::SliceRandom;
 use crate::game::dice;
 
-const NUM_ROWS: usize = 4;
-const NUM_COLS: usize = 4;
+const SIZE: usize = 4;
+const NUM_ROWS: usize = SIZE;
+const NUM_COLS: usize = SIZE;
 const LEN_ROW: usize = NUM_COLS;
 const LEN_COL: usize = NUM_ROWS;
 
-const NUM_CELLS: usize = NUM_ROWS * NUM_COLS;
+pub const NUM_CELLS: usize = NUM_ROWS * NUM_COLS;
 
+#[derive(Debug)]
 pub enum Direction {
     North,
     East,
@@ -17,13 +20,16 @@ pub enum Direction {
 }
 
 #[derive(Debug)]
-pub struct Cell <'a> {
+pub struct Cell {
     traversed_already: bool,
-    value: &'a str,
+    value: String,
 }
 
-impl <'a> Cell<'a> {
-    pub fn new (value: &'a str) -> Self { 
+impl Cell {
+    pub fn new(value: &str) -> Self { 
+
+        let value = String::from_str(value).expect("String should be parsable.");
+
         Self {
             traversed_already: false,
             value,
@@ -32,11 +38,11 @@ impl <'a> Cell<'a> {
 }
 
 #[derive(Debug)]
-pub struct Grid <'a> {
-    cells: Vec<Cell<'a>>,
+pub struct Grid {
+    cells: Vec<Cell>,
 }
 
-impl <'a> Grid <'_> {
+impl Grid {
 
     pub fn new() -> Self {
     
@@ -57,18 +63,31 @@ impl <'a> Grid <'_> {
         }
     }
 
+    pub fn new_from_values(values: Vec<&str>) -> Self {
+
+        let mut cells = Vec::new();
+
+        for value in &values {
+            cells.push(Cell::new(value));
+        }
+
+        Grid {
+            cells,
+        }
+    }
+
     pub fn go(index: usize, direction: Direction) -> Option<usize> {
         // Return the index of the cell to the direction of the cell specified by index
         match direction {
             Direction::North => if index < LEN_ROW { None } else { Some(index - LEN_ROW) },
-            Direction::East => if index % LEN_ROW == 0 { None } else { Some(index + 1) },
-            Direction::South => if index + LEN_ROW > NUM_CELLS { None } else { Some(index + LEN_ROW) }, 
-            Direction::West => if index % LEN_ROW == 3 { None } else { Some(index - 1) },
+            Direction::East => if index % LEN_ROW == (LEN_ROW - 1) { None } else { Some(index + 1) },
+            Direction::South => if index + LEN_ROW >= NUM_CELLS { None } else { Some(index + LEN_ROW) }, 
+            Direction::West => if index % LEN_ROW == 0 { None } else { Some(index - 1) },
         }
     }
 }
 
-impl fmt::Display for Grid<'_> {
+impl fmt::Display for Grid {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 
         assert!(self.cells.len() == NUM_COLS * NUM_ROWS);
