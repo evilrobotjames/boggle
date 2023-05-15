@@ -10,12 +10,9 @@ pub fn new_random() -> Grid {
     Grid::new()
 }
 
-pub fn new_from_values(values: Vec<&str>) -> Option<Grid> {
-    if values.len() != grid::NUM_CELLS {
-        return None;
-    }
+pub fn new_from_values(values: Vec<String>) -> Result<Grid, String> {
 
-    Some(Grid::new_from_values(values))
+    Grid::new_from_values(values)
 }
 
 pub fn solve(_grid: Grid, _lookup: fn(&str) -> bool) -> Vec<String> {

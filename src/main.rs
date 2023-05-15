@@ -9,11 +9,15 @@ mod game;
 #[derive(Debug)]
 #[derive(Parser)]
 struct Cli {
+    #[arg(num_args(0..))]
+    values: Vec<String>,
 }
 
 fn main() {
 
-    let _args = Cli::parse();
+    let args = Cli::parse();
+
+    println!("{:?}", args);
 
     let grid = game::new_random();
 

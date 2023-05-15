@@ -63,17 +63,22 @@ impl Grid {
         }
     }
 
-    pub fn new_from_values(values: Vec<&str>) -> Self {
+    pub fn new_from_values(values: Vec<String>) -> Result<Self, String> {
 
         let mut cells = Vec::new();
 
-        for value in &values {
-            cells.push(Cell::new(value));
+        if values.len() != NUM_CELLS {
+            return Err(format!("Found {} values, require {NUM_CELLS}", values.len()));
         }
 
-        Grid {
-            cells,
+        for value in values {
+            if !value.chars().all(char::is_alphabetic) {
+                return Err(format!("'{value}' not alpha"));
+            }
+            cells.push(Cell::new(value.as_str()));
         }
+
+        Ok(Grid { cells })
     }
 
     pub fn go(index: usize, direction: Direction) -> Option<usize> {
