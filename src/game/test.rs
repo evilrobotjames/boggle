@@ -1,54 +1,38 @@
 #[cfg(test)]
 mod tests {
-    
+
     use crate::game::grid::{Direction, Grid};
-    
-// 0  1  2  3
-// 4  5  6  7
-// 8  9  10 11
-// 12 13 14 15
 
-    fn direction_and_go(start: usize, direction: Direction, expected_destination: Option<usize>) {
+    fn go_all_directions(start: usize, expected_results: [Option<usize>; 4]) {
+        let directions = [Direction::North, Direction::East, Direction::South, Direction::West];
 
-        let description = format!("start: {}, direction: {:?}, expected: {:?}",
-                                  start, direction, expected_destination);
+        for (i, expected) in expected_results.iter().enumerate() {
+            let result = Grid::go(start, directions[i]);
 
-        let result = Grid::go(start, direction);
+            let description = format!("start: {}, direction: {:?}, expected: {:?}, result: {:?}",
+            start, directions[i], *expected, result);
 
-        let diagnostic = format!("{}, result: {:?}", description, result);
-
-        if expected_destination.is_none() {
-            assert!(result.is_none(), "{}", diagnostic);
-        } else {
-            assert!(result == expected_destination, "{}", diagnostic);
+            assert!(result == *expected, "{}", description);
         }
     }
 
     #[test]    
-    fn test_direction_and_go() {
-        direction_and_go(0, Direction::North, None);
-        direction_and_go(0, Direction::East, Some(1));
-        direction_and_go(0, Direction::South, Some(4));
-        direction_and_go(0, Direction::West, None);
-        
-        direction_and_go(1, Direction::North, None);
-        direction_and_go(1, Direction::East, Some(2));
-        direction_and_go(1, Direction::South, Some(5));
-        direction_and_go(1, Direction::West, Some(0));
+    fn test_go() {
+        // Logical layout of cells:
+        //
+        // 0  1  2  3
+        // 4  5  6  7
+        // 8  9  10 11
+        // 12 13 14 15
 
-        direction_and_go(4, Direction::North, Some(0));
-        direction_and_go(4, Direction::East, Some(5));
-        direction_and_go(4, Direction::South, Some(8));
-        direction_and_go(4, Direction::West, None);
+        // check all corners
 
-        direction_and_go(12, Direction::North, Some(8));
-        direction_and_go(12, Direction::East, Some(13));
-        direction_and_go(12, Direction::South, None);
-        direction_and_go(12, Direction::West, None);
-        
-        direction_and_go(15, Direction::North, Some(11));
-        direction_and_go(15, Direction::East, None);
-        direction_and_go(15, Direction::South, None);
-        direction_and_go(15, Direction::West, Some(14));
+        go_all_directions(0, [None, Some(1), Some(4), None]);
+        go_all_directions(4, [Some(0), Some(5), Some(8), None]);
+        go_all_directions(12, [Some(8), Some(13), None, None]);
+        go_all_directions(15, [Some(11), None, None, Some(14)]);
+
+        // and something in the center
+        go_all_directions(5, [Some(1), Some(6), Some(9), Some(4)]);
     }
 }

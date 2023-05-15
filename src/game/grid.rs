@@ -11,7 +11,7 @@ const LEN_COL: usize = NUM_ROWS;
 
 pub const NUM_CELLS: usize = NUM_ROWS * NUM_COLS;
 
-#[derive(Debug)]
+#[derive(Debug, Copy, Clone)]
 pub enum Direction {
     North,
     East,
