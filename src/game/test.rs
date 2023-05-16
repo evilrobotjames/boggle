@@ -26,7 +26,6 @@ mod tests {
         // 12 13 14 15
 
         // check all corners
-
         go_all_directions(0, [None, Some(1), Some(4), None]);
         go_all_directions(4, [Some(0), Some(5), Some(8), None]);
         go_all_directions(12, [Some(8), Some(13), None, None]);

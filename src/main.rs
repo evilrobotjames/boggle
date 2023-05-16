@@ -17,9 +17,19 @@ fn main() {
 
     let args = Cli::parse();
 
-    println!("{:?}", args);
+    let grid;
 
-    let grid = game::new_random();
-
-    println!("{}", grid)
+    if args.values.len() > 0 {
+        let mut values = Vec::new();
+        for value in args.values {
+            values.push(value);
+        }
+        match game::new_from_values(values) {
+            Err(err) => { eprintln!("Error: {}", err); },
+            Ok(grid) => { println!("{}", grid); }
+        }
+    } else {
+        grid = game::new_random();
+        println!("{}", grid)
+    }    
 }
