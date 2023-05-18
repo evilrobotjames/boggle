@@ -19,10 +19,13 @@ pub enum Direction {
     West,
 }
 
+pub static DIRECTIONS: [Direction; 4] = [Direction::North, Direction::East, 
+                                    Direction::South, Direction::West];
+
 #[derive(Debug)]
 pub struct Cell {
-    traversed_already: bool,
-    value: String,
+    pub traversed_already: bool,
+    pub value: String,
 }
 
 impl Cell {
@@ -39,13 +42,14 @@ impl Cell {
 
 #[derive(Debug)]
 pub struct Grid {
-    cells: Vec<Cell>,
+    pub words_found: Vec<String>,
+    pub cells: Vec<Cell>,
 }
 
 impl Grid {
 
-    pub fn new() -> Self {
-    
+    pub fn new_random() -> Self {
+
         // Create a new grid, with some random stuff in cells.
 
         let mut dice_order: Vec<usize> = (0..NUM_CELLS).collect();
@@ -59,6 +63,7 @@ impl Grid {
         }
 
         Grid {
+            words_found: Vec::new(),
             cells: cells,
         }
     }
@@ -78,7 +83,9 @@ impl Grid {
             cells.push(Cell::new(value.as_str()));
         }
 
-        Ok(Grid { cells })
+        let grid = Grid { words_found: Vec::new(), cells };
+
+        Ok(grid)
     }
 
     pub fn go(index: usize, direction: Direction) -> Option<usize> {

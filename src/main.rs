@@ -6,8 +6,7 @@ use clap::Parser;
 mod dictionary;
 mod game;
 
-#[derive(Debug)]
-#[derive(Parser)]
+#[derive(Debug, Parser)]
 struct Cli {
     #[arg(num_args(0..))]
     values: Vec<String>,
@@ -16,20 +15,25 @@ struct Cli {
 fn main() {
 
     let args = Cli::parse();
-
-    let grid;
+    let mut grid;
 
     if args.values.len() > 0 {
         let mut values = Vec::new();
         for value in args.values {
             values.push(value);
         }
+
         match game::new_from_values(values) {
-            Err(err) => { eprintln!("Error: {}", err); },
-            Ok(grid) => { println!("{}", grid); }
+            Err(err) => { eprintln!("Error: {}", err); std::process::exit(1) },
+            Ok(g) => { grid = g; println!("{}", grid); }
         }
     } else {
         grid = game::new_random();
-        println!("{}", grid)
-    }    
+
+        game::solve(&mut grid, dictionary::contains_word);
+
+        println!("{}", grid);
+
+        println!("{:?}", grid.words_found);
+    }
 }
