@@ -68,7 +68,7 @@ impl Grid {
         }
     }
 
-    pub fn new_from_values(values: Vec<String>) -> Result<Self, String> {
+    pub fn new_from_values<S>(values: Vec<S>) -> Result<Self, String> where S: Into<String>{
 
         let mut cells = Vec::new();
 
@@ -77,15 +77,14 @@ impl Grid {
         }
 
         for value in values {
+            let value = value.into();
             if !value.chars().all(char::is_alphabetic) {
                 return Err(format!("'{value}' not alpha"));
             }
             cells.push(Cell::new(value.as_str()));
         }
 
-        let grid = Grid { words_found: Vec::new(), cells };
-
-        Ok(grid)
+        Ok(Grid { words_found: Vec::new(), cells })
     }
 
     pub fn go(index: usize, direction: Direction) -> Option<usize> {

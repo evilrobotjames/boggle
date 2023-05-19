@@ -1,7 +1,9 @@
 #[cfg(test)]
 mod tests {
 
-    use crate::game::grid::{Direction, Grid};
+    use std::str::FromStr;
+
+    use crate::{game::{grid::{Direction, Grid}, self}, dictionary};
 
     fn go_all_directions(start: usize, expected_results: [Option<usize>; 4]) {
         let directions = [Direction::North, Direction::East, Direction::South, Direction::West];
@@ -33,5 +35,28 @@ mod tests {
 
         // and something in the center
         go_all_directions(5, [Some(1), Some(6), Some(9), Some(4)]);
+    }
+
+    #[test]
+    fn test_new_random() {
+        // Validate random grid can, at least, be formed.
+        Grid::new_random();
+    }
+
+    #[test]
+    fn test_new_from_values() {
+
+        // Form grid from some values
+        let values = vec!(
+            "qu", "e", "a", "a",
+            "a", "s", "a", "a",
+            "a", "t", "n", "a",
+            "a", "i", "o", "a",
+        );
+        let mut grid = Grid::new_from_values(values).expect("Grid should at least instantiate");
+
+        // Definitely contains "question"
+        game::solve(&mut grid, dictionary::contains_word);
+        assert!(grid.words_found.contains(&String::from_str("question").unwrap()));
     }
 }
