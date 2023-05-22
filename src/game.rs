@@ -9,7 +9,7 @@ pub mod grid;
 use std::string::String;
 
 pub fn new_random() -> Grid {
-    Grid::new_random()
+    Grid::new_random(4)
 }
 
 pub fn new_from_values(values: Vec<String>) -> Result<Grid, String> {
@@ -31,7 +31,7 @@ fn solve_recurse(grid: &mut Grid, lookup: fn(&str) -> bool, start: usize, potent
     }
 
     for direction in grid::DIRECTIONS.iter() {
-        match Grid::go(start, *direction) {
+        match grid.go(start, *direction) {
             None => continue,
             Some(next) => {
                 solve_recurse(grid, lookup, next, potential_word);

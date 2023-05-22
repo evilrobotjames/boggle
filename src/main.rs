@@ -25,15 +25,13 @@ fn main() {
 
         match game::new_from_values(values) {
             Err(err) => { eprintln!("Error: {}", err); std::process::exit(1) },
-            Ok(g) => { grid = g; println!("{}", grid); }
+            Ok(g) => { grid = g; }
         }
     } else {
         grid = game::new_random();
-
-        game::solve(&mut grid, dictionary::contains_word);
-
-        println!("{}", grid);
-
-        println!("{:?}", grid.words_found);
     }
+    println!("{}", grid);
+    
+    game::solve(&mut grid, dictionary::contains_word);
+    println!("{:?}", grid.words_found);
 }

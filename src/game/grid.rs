@@ -3,24 +3,24 @@ use std::str::FromStr;
 use rand::prelude::SliceRandom;
 use crate::game::dice;
 
-const SIZE: usize = 4;
-const NUM_ROWS: usize = SIZE;
-const NUM_COLS: usize = SIZE;
-const LEN_ROW: usize = NUM_COLS;
-const LEN_COL: usize = NUM_ROWS;
-
-pub const NUM_CELLS: usize = NUM_ROWS * NUM_COLS;
+pub const SIZES_SUPPORTED: [usize; 1] = [4];
 
 #[derive(Debug, Copy, Clone)]
 pub enum Direction {
     North,
+    NorthEast,
     East,
+    SouthEast,
     South,
+    SouthWest,
     West,
+    NorthWest,
 }
 
-pub static DIRECTIONS: [Direction; 4] = [Direction::North, Direction::East, 
-                                    Direction::South, Direction::West];
+pub static DIRECTIONS: [Direction; 8] = [
+    Direction::North, Direction::NorthEast, Direction::East, Direction::SouthEast,
+    Direction::South, Direction::SouthWest, Direction::West, Direction::NorthWest];
+
 
 #[derive(Debug)]
 pub struct Cell {
@@ -42,17 +42,20 @@ impl Cell {
 
 #[derive(Debug)]
 pub struct Grid {
-    pub words_found: Vec<String>,
+    pub size: usize,
     pub cells: Vec<Cell>,
+    pub words_found: Vec<String>,
 }
 
 impl Grid {
 
-    pub fn new_random() -> Self {
+    pub fn new_random(size: usize) -> Self {
+
+        assert!(SIZES_SUPPORTED.contains(&size));
 
         // Create a new grid, with some random stuff in cells.
 
-        let mut dice_order: Vec<usize> = (0..NUM_CELLS).collect();
+        let mut dice_order: Vec<usize> = (0..size*size).collect();
         dice_order.shuffle(&mut rand::thread_rng());
 
         let mut cells = Vec::new();
@@ -63,18 +66,27 @@ impl Grid {
         }
 
         Grid {
-            words_found: Vec::new(),
+            size,
             cells: cells,
-        }
+            words_found: Vec::new(),        }
     }
 
     pub fn new_from_values<S>(values: Vec<S>) -> Result<Self, String> where S: Into<String>{
 
-        let mut cells = Vec::new();
-
-        if values.len() != NUM_CELLS {
-            return Err(format!("Found {} values, require {NUM_CELLS}", values.len()));
+        let mut size = 0;
+        for s in SIZES_SUPPORTED {
+            if values.len() == s*s {
+                size = s
+            }
         }
+
+        if 0 == size {
+            return Err(format!("Found {} values, require {:?}", values.len(), SIZES_SUPPORTED));
+        }
+
+        // Construct the Grid.
+
+        let mut cells = Vec::new();
 
         for value in values {
             let value = value.into();
@@ -84,16 +96,36 @@ impl Grid {
             cells.push(Cell::new(value.as_str()));
         }
 
-        Ok(Grid { words_found: Vec::new(), cells })
+        Ok(Grid { size, words_found: Vec::new(), cells })
     }
 
-    pub fn go(index: usize, direction: Direction) -> Option<usize> {
+    pub fn is_north_edge(&self, index: usize) -> bool {
+        index < self.size
+    }
+
+    pub fn is_east_edge(&self, index: usize) -> bool {
+        index % self.size >= self.size - 1
+    }
+
+    pub fn is_south_edge(&self, index: usize) -> bool {
+        index >= self.size.pow(2) - self.size
+    }
+    
+    pub fn is_west_edge(&self, index: usize) -> bool {
+        index % self.size == 0
+    }
+
+    pub fn go(&self, index: usize, direction: Direction) -> Option<usize> {
         // Return the index of the cell to the direction of the cell specified by index
         match direction {
-            Direction::North => if index < LEN_ROW { None } else { Some(index - LEN_ROW) },
-            Direction::East => if index % LEN_ROW == (LEN_ROW - 1) { None } else { Some(index + 1) },
-            Direction::South => if index + LEN_ROW >= NUM_CELLS { None } else { Some(index + LEN_ROW) }, 
-            Direction::West => if index % LEN_ROW == 0 { None } else { Some(index - 1) },
+            Direction::North => if self.is_north_edge(index) { None } else { Some(index - self.size) },
+            Direction::NorthEast => if self.is_east_edge(index) || self.is_north_edge(index) { None } else { Some(index - self.size + 1) },
+            Direction::East => if self.is_east_edge(index) { None } else { Some(index + 1) },
+            Direction::SouthEast => if self.is_east_edge(index) || self.is_south_edge(index) { None } else { Some(index + self.size + 1) },
+            Direction::South => if self.is_south_edge(index) { None } else { Some(index + self.size) }, 
+            Direction::SouthWest => if self.is_west_edge(index) || self.is_south_edge(index) { None } else { Some(index + self.size - 1) },
+            Direction::West => if self.is_west_edge(index) { None } else { Some(index - 1) },
+            Direction::NorthWest => if self.is_west_edge(index) || self.is_north_edge(index) { None } else { Some(index - self.size - 1) },
         }
     }
 }
@@ -101,18 +133,16 @@ impl Grid {
 impl fmt::Display for Grid {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 
-        assert!(self.cells.len() == NUM_COLS * NUM_ROWS);
-
         let mut output = String::new();
 
-        for row in 0..NUM_ROWS {
+        for row in 0..self.size {
 
             if row > 0 {
                 output.push('\n');
             }
 
-            for col in 0..NUM_COLS {
-                output.push_str(format!("{} ", self.cells[NUM_COLS * row + col].value).as_str());
+            for col in 0..self.size {
+                output.push_str(format!("{} ", self.cells[self.size * row + col].value).as_str());
             }            
         }
 
