@@ -15,9 +15,7 @@ pub fn to_list() -> String {
     ROOT.to_list()
 }
 
-pub fn contains_word(word: &str) -> bool {
-    // This could return yes, no, and "no and what you've given me isn't even a prefix
-    // to a word", as an optimization.  Yes, No, Never.
+pub fn contains_word(word: &str) -> tree::IsValidWord {
 
     ROOT.contains_word(word)
 }

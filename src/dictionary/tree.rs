@@ -7,6 +7,13 @@ pub struct Node {
     pub children: HashMap<char, Node>,
 }
 
+#[derive(PartialEq)]
+pub enum IsValidWord {
+    Yes,
+    No, // If you add more letters it might become one
+    Never, // No, and won't be even if you add more letters
+}
+
 impl Node {
     fn new() -> Node {
         Node { complete_word: false, children: HashMap::new() }
@@ -56,13 +63,23 @@ impl Node {
         words.join("\n")
     }
 
-    pub fn contains_word(&self, word: &str) -> bool {
+    pub fn contains_word(&self, word: &str) -> IsValidWord {
 
         match word.chars().next() {
-            None => self.complete_word, // 'word' is out of characters, return whether this is a complete word or not.
+            None => {
+                // 'word' is out of characters, return whether this is a complete word or not.
+                if self.complete_word {
+                    IsValidWord::Yes
+                } else {
+                    IsValidWord::No
+                }
+            },
             Some(c) => {
                 match self.children.get(&c) {
-                    None => false, // No child node for this letter, so not a complete word
+                    None => {
+                        // No child node for this letter, so not a complete word and won't become one with more letters
+                        IsValidWord::Never
+                    }
                     Some(child) => child.contains_word(&word[1..])
                 }
             }

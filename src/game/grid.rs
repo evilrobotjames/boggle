@@ -99,19 +99,24 @@ impl Grid {
         Ok(Grid { size, words_found: Vec::new(), cells })
     }
 
-    pub fn is_north_edge(&self, index: usize) -> bool {
+    pub fn words_found(&mut self) -> &Vec<String> {
+        self.words_found.sort_by(|a, b| b.len().cmp(&a.len()));
+        &self.words_found
+    }
+
+    fn is_north_edge(&self, index: usize) -> bool {
         index < self.size
     }
 
-    pub fn is_east_edge(&self, index: usize) -> bool {
+    fn is_east_edge(&self, index: usize) -> bool {
         index % self.size >= self.size - 1
     }
 
-    pub fn is_south_edge(&self, index: usize) -> bool {
+    fn is_south_edge(&self, index: usize) -> bool {
         index >= self.size.pow(2) - self.size
     }
     
-    pub fn is_west_edge(&self, index: usize) -> bool {
+    fn is_west_edge(&self, index: usize) -> bool {
         index % self.size == 0
     }
 
