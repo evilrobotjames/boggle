@@ -36,7 +36,7 @@ fn display_solution(grid: &mut Grid) {
         // Print a new heading, or the word.
         if word.len() < length {
             length = word.len();
-            print!("\n\n{length}: {word} ")
+            print!("\n{length}: {word} ")
         } else {
             print!("{word} ");
         }
@@ -64,7 +64,7 @@ fn main() {
         grid = game::new_random();
     }
 
-    print!("{}", grid);
+    println!("{}", grid);
 
     game::solve(&mut grid, dictionary::contains_word);
     
