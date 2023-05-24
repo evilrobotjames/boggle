@@ -104,19 +104,19 @@ impl Grid {
         &self.words_found
     }
 
-    fn is_north_edge(&self, index: usize) -> bool {
+    pub fn is_north_edge(&self, index: usize) -> bool {
         index < self.size
     }
 
-    fn is_east_edge(&self, index: usize) -> bool {
+    pub fn is_east_edge(&self, index: usize) -> bool {
         index % self.size >= self.size - 1
     }
 
-    fn is_south_edge(&self, index: usize) -> bool {
+    pub fn is_south_edge(&self, index: usize) -> bool {
         index >= self.size.pow(2) - self.size
     }
     
-    fn is_west_edge(&self, index: usize) -> bool {
+    pub fn is_west_edge(&self, index: usize) -> bool {
         index % self.size == 0
     }
 

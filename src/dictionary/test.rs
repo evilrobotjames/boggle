@@ -1,8 +1,10 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::dictionary::{list, tree::generate_root, testlist};
-    use IsValidWord::{Yes, No, Never};
+    use crate::dictionary::{
+        list, tree::generate_root, testlist,
+        tree::IsValidWord::{Yes, No, Never}
+    };
     
     fn test_round_trip(wordlist: &str) {
         assert_eq!(wordlist, generate_root(wordlist).to_list());
@@ -36,5 +38,4 @@ mod tests {
         assert!(root.contains_word("") == No);
         assert!(root.contains_word("abcdefghijklmnopqrstuvwxyz") == Never);
     }
-
 }
