@@ -61,7 +61,7 @@ impl Grid {
         let mut cells = Vec::new();
 
         for dice_index in dice_order {
-            let value = dice::roll(dice::DICE[dice_index]);
+            let value = dice::roll(dice::DICE_REGULAR[dice_index]);
             cells.push(Cell::new(value));
         }
 
@@ -113,7 +113,7 @@ impl Grid {
     }
 
     pub fn is_south_edge(&self, index: usize) -> bool {
-        index >= self.size.pow(2) - self.size
+        index >= self.cells.len() - self.size
     }
     
     pub fn is_west_edge(&self, index: usize) -> bool {
