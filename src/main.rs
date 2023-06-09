@@ -61,7 +61,7 @@ fn main() {
             Ok(g) => { grid = g; }
         }
     } else {
-        grid = game::new_random();
+        grid = game::new_random(4).expect("side_length is valid");
     }
 
     println!("{}", grid);

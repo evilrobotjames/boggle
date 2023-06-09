@@ -3,7 +3,48 @@ mod tests {
 
     use std::str::FromStr;
 
-    use crate::{game::{grid::{Grid, DIRECTIONS}, self}, dictionary};
+    use crate::{game::{grid::{Grid, DIRECTIONS, invalid_cell_count_diagnostic, side_length_from_cell_count, lookup_dice_set_by_cell_count, lookup_dice_set_by_side_length}, self}, dictionary};
+
+    #[test]
+    fn test_side_length_from_cell_count() {
+        let f = side_length_from_cell_count;
+        assert!(f(1) == Some(1));
+        assert!(f(3) == None);
+        assert!(f(4) == Some(2));
+        assert!(f(5) == None);
+        assert!(f(16) == Some(4));
+        assert!(f(24) == None);
+        assert!(f(25) == Some(5));
+        assert!(f(36) == Some(6));
+    }
+
+    #[test]
+    fn test_invalid_cell_count_diagnostic() {
+        let diagnostic = invalid_cell_count_diagnostic(4);
+        assert!(diagnostic == "Cells specified: 4.  Require: 16, 25, 36");
+    }
+
+    #[test]
+    fn test_lookup_dice_set_by_cell_count() {
+        let f = lookup_dice_set_by_cell_count;
+        assert!(f(3).is_err()); 
+        assert!(f(4).is_err()); 
+        assert!(f(15).is_err()); 
+        assert!(f(16).unwrap().len() == 16); 
+        assert!(f(25).unwrap().len() == 25); 
+        assert!(f(36).unwrap().len() == 36); 
+    }
+
+    #[test]
+    fn test_lookup_dice_set_by_side_length() {
+        let f = lookup_dice_set_by_side_length;
+        assert!(f(3).is_err());
+        assert!(f(4).unwrap().len() == 16); 
+        assert!(f(5).unwrap().len() == 25); 
+        assert!(f(6).unwrap().len() == 36);
+        assert!(f(7).is_err());       
+        assert!(f(9).is_err()); 
+    }
 
     fn go_all_directions(grid: &Grid, start: usize, expected_results: [Option<usize>; 8]) {
 
@@ -19,16 +60,38 @@ mod tests {
 
     #[test]    
     fn test_edges() {
-        let grid = Grid::new_random(4);
-        assert!(grid.is_north_edge(0));
-        assert!(grid.is_north_edge(1));
-        assert!(grid.is_north_edge(2));
-        assert!(grid.is_north_edge(3));
-        assert!(!grid.is_north_edge(4));
-        assert!(!grid.is_north_edge(5));
-        assert!(!grid.is_north_edge(6));
-    }
+        // Logical layout of cells:
+        // 0  1  2  3
+        // 4  5  6  7
+        // 8  9  10 11
+        // 12 13 14 15
+        let grid = Grid::new_random(4).unwrap();
 
+        for cell in [0, 1, 2, 3] {
+            assert!(grid.is_north_edge(cell));
+        }
+        for cell in [4, 5, 6] {
+            assert!(!grid.is_north_edge(cell));
+        }
+        for cell in [3, 7, 15] {
+            assert!(grid.is_east_edge(cell));
+        }
+        for cell in [0, 5, 14] {
+            assert!(!grid.is_east_edge(cell));
+        }
+        for cell in [12, 13, 15] {
+            assert!(grid.is_south_edge(cell));
+        }
+        for cell in [0, 5, 11] {
+            assert!(!grid.is_south_edge(cell));
+        }
+        for cell in [0, 4, 12] {
+            assert!(grid.is_west_edge(cell));
+        }
+        for cell in [5, 10, 15] {
+            assert!(!grid.is_west_edge(cell));
+        }
+    }
 
     #[test]    
     fn test_go() {
@@ -37,7 +100,7 @@ mod tests {
         // 4  5  6  7
         // 8  9  10 11
         // 12 13 14 15
-        let grid = Grid::new_random(4);
+        let grid = game::new_random(4).unwrap();
 
         // check all corners
         go_all_directions(&grid, 0, [None, None, Some(1), Some(5), Some(4), None, None, None]);
@@ -52,15 +115,17 @@ mod tests {
     #[test]
     fn test_new_random() {
         // Validate random grid can, at least, be formed.
-        Grid::new_random(4);
+        game::new_random(4).unwrap();
     }
 
     #[test]
     #[should_panic]
     fn test_new_random_fails() {
-        // Validate random grid can, at least, be formed.
-        Grid::new_random(5);
-        
+        // Validate random grid fails when given non-square numbers.
+        assert!(Grid::new_random(15).expect_err("").as_str() == 
+                "Cells specified: 15.  Require: 16, 25, 36");
+        assert!(Grid::new_random(24).expect_err("").as_str() ==
+                "Cells specified: 24.  Require: 16, 25, 36");
     }
 
     #[test]

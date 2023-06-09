@@ -9,8 +9,8 @@ pub mod grid;
 
 use std::string::String;
 
-pub fn new_random() -> Grid {
-    Grid::new_random(4)
+pub fn new_random(side_length: usize) -> Result<Grid, String> {
+    Grid::new_random(side_length)
 }
 
 pub fn new_from_values(values: Vec<String>) -> Result<Grid, String> {
