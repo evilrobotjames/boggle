@@ -2,12 +2,11 @@
 mod tests {
 
     use std::str::FromStr;
-
-    use crate::{game::{grid::{Grid, DIRECTIONS, invalid_cell_count_diagnostic, side_length_from_cell_count, lookup_dice_set_by_cell_count, lookup_dice_set_by_side_length}, self}, dictionary};
+    use crate::game::{grid, Grid, dictionary, self};
 
     #[test]
     fn test_side_length_from_cell_count() {
-        let f = side_length_from_cell_count;
+        let f = grid::side_length_from_cell_count;
         assert!(f(1) == Some(1));
         assert!(f(3) == None);
         assert!(f(4) == Some(2));
@@ -20,13 +19,13 @@ mod tests {
 
     #[test]
     fn test_invalid_cell_count_diagnostic() {
-        let diagnostic = invalid_cell_count_diagnostic(4);
+        let diagnostic = grid::invalid_cell_count_diagnostic(4);
         assert!(diagnostic == "Cells specified: 4.  Require: 16, 25, 36");
     }
 
     #[test]
     fn test_lookup_dice_set_by_cell_count() {
-        let f = lookup_dice_set_by_cell_count;
+        let f = grid::lookup_dice_set_by_cell_count;
         assert!(f(3).is_err()); 
         assert!(f(4).is_err()); 
         assert!(f(15).is_err()); 
@@ -37,7 +36,7 @@ mod tests {
 
     #[test]
     fn test_lookup_dice_set_by_side_length() {
-        let f = lookup_dice_set_by_side_length;
+        let f = grid::lookup_dice_set_by_side_length;
         assert!(f(3).is_err());
         assert!(f(4).unwrap().len() == 16); 
         assert!(f(5).unwrap().len() == 25); 
@@ -49,10 +48,10 @@ mod tests {
     fn go_all_directions(grid: &Grid, start: usize, expected_results: [Option<usize>; 8]) {
 
         for (i, expected) in expected_results.iter().enumerate() {
-            let result = grid.go(start, DIRECTIONS[i]);
+            let result = grid.go(start, grid::DIRECTIONS[i]);
 
             let description = format!("start: {}, direction: {:?}, expected: {:?}, result: {:?}",
-            start, DIRECTIONS[i], *expected, result);
+            start, grid::DIRECTIONS[i], *expected, result);
 
             assert!(result == *expected, "{}", description);
         }
@@ -100,7 +99,7 @@ mod tests {
         // 4  5  6  7
         // 8  9  10 11
         // 12 13 14 15
-        let grid = game::new_random(4).unwrap();
+        let grid = Grid::new_random(4).unwrap();
 
         // check all corners
         go_all_directions(&grid, 0, [None, None, Some(1), Some(5), Some(4), None, None, None]);
@@ -115,7 +114,7 @@ mod tests {
     #[test]
     fn test_new_random() {
         // Validate random grid can, at least, be formed.
-        game::new_random(4).unwrap();
+        Grid::new_random(4).unwrap();
     }
 
     #[test]

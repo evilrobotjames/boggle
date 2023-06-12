@@ -56,6 +56,7 @@ pub fn side_length_from_cell_count(cell_count: usize) -> Option<usize> {
 }
 
 pub fn invalid_cell_count_diagnostic(cell_count: usize) -> String {
+    // Dog's breakfast.  Rewrite with iter.find().
     let diagnostic = format!("Cells specified: {cell_count}.  Require: ");
     let mut diagnostic = String::from_str(&diagnostic).unwrap();
     let mut required = String::new();
